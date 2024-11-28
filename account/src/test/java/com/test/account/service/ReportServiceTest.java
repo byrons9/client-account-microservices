@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReportServiceTest {
@@ -46,7 +46,7 @@ public class ReportServiceTest {
         movementDTO.setBalance(100.0);
         movementDTO.setStatus(true);
         movementDTO.setAccountNumber("123456");
-        movementDTO.setCreatedAt(Instant.now());
+        movementDTO.setCreatedAt(LocalDate.now());
 
 
 

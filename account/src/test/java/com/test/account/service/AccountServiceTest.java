@@ -163,14 +163,14 @@ class AccountServiceTest {
 
         List<AccountDTO> expectedAccountDTOList = List.of(accountDTO, accountDTO2);
 
-        Mockito.when(accountRepository.findByClientId(1L)).thenReturn(List.of(account, account2));
+        Mockito.when(accountRepository.findByCustomerId(1L)).thenReturn(List.of(account, account2));
         Mockito.when(accountConverter.fromListEntityToDTOList(List.of(account, account2))).thenReturn(List.of(accountDTO, accountDTO2));
 
         List<AccountDTO> accountDTOList = accountService.findByCustomerId(1L);
 
         Assertions.assertThat(accountDTOList).isEqualTo(expectedAccountDTOList).hasSize(2);
 
-        Mockito.verify(accountRepository, Mockito.times(1)).findByClientId(1L);
+        Mockito.verify(accountRepository, Mockito.times(1)).findByCustomerId(1L);
     }
 
     @Test

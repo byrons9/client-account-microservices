@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,51 +38,51 @@ public class ReportService implements IReportService {
             throw new IllegalArgumentException("End date is required");
         }
 
-        Instant startDate = this.convertStringToLocalInstant(startDateStr);
-        Instant endDate = this.convertStringToLocalInstant(endDateStr);
+        LocalDate startDate = this.convertStringToLocalDate(startDateStr);
+        LocalDate endDate = this.convertStringToLocalDate(endDateStr);
 
 
         if (customerName == null) {
-            throw new IllegalArgumentException("Client name is required");
+            throw new IllegalArgumentException("Customer name is required");
         }
-        CustomerResponse customerResponse = customerHttpService.getCustomerByName(customerName);
+        CustomerResponse clientResponse = customerHttpService.getCustomerByName(customerName);
 
-        if (customerResponse == null) {
+        if (clientResponse == null) {
             throw new IllegalArgumentException("Customer not found");
         }
 
 
-        List<AccountDTO> accounts = accountService.findByCustomerId(customerResponse.getId());
+        List<AccountDTO> accounts = accountService.findByCustomerId(clientResponse.getId());
 
         if (accounts.isEmpty()) {
-            throw new IllegalArgumentException("Customer does not have accounts");
+            throw new IllegalArgumentException("Customer has no accounts");
         }
 
-        return this.getMovementsByDateClientName(startDate, endDate, accounts, customerResponse);
+        return this.getMovementsByDateClientName(startDate, endDate, accounts, clientResponse);
     }
 
-    private List<ReportDTO> getMovementsByDateClientName(Instant startDate, Instant endDate, List<AccountDTO> accounts, CustomerResponse clientResponse) {
+    private List<ReportDTO> getMovementsByDateClientName(LocalDate startDate, LocalDate endDate, List<AccountDTO> accounts, CustomerResponse customerResponse) {
         List<ReportDTO> reports = new ArrayList<>();
         accounts.forEach(account -> {
             List<MovementDTO> movements = this.filterMovementsByDate(account.getMovements(), startDate, endDate);
             movements.forEach(movement -> {
-                reports.add(this.convertData(movement, account, clientResponse));
+                reports.add(this.convertData(movement, account, customerResponse));
             });
         });
 
         return  reports;
     }
 
-    public List<MovementDTO> filterMovementsByDate(List<MovementDTO> movements, Instant startDate, Instant endDate) {
+    public List<MovementDTO> filterMovementsByDate(List<MovementDTO> movements, LocalDate startDate, LocalDate endDate) {
         return movements.stream()
                 .filter(movement -> !movement.getCreatedAt().isBefore(startDate) && !movement.getCreatedAt().isAfter(endDate))
                 .collect(Collectors.toList());
     }
 
-    private ReportDTO convertData(MovementDTO movementDTO, AccountDTO accountDTO, CustomerResponse customerResponse) {
+    private ReportDTO convertData(MovementDTO movementDTO, AccountDTO accountDTO, CustomerResponse clientResponse) {
         ReportDTO reportDTO = new ReportDTO();
         reportDTO.setDate(castDate(movementDTO.getCreatedAt()));
-        reportDTO.setCustomer(customerResponse.getName());
+        reportDTO.setCustomer(clientResponse.getName());
         reportDTO.setAccountNumber(accountDTO.getAccountNumber());
         reportDTO.setType(accountDTO.getAccountType());
         reportDTO.setInitialBalance(accountDTO.getInitialBalance());
@@ -89,19 +92,18 @@ public class ReportService implements IReportService {
         return reportDTO;
     }
 
-    private String castDate(Instant date){
-        return date.toString();
+    private String castDate(LocalDate date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return date.format(formatter);
     }
 
-    private Instant convertStringToLocalInstant(String dateStr){
+    private LocalDate convertStringToLocalDate(String dateStr){
         try{
-            return Instant.parse(dateStr);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return LocalDate.parse(dateStr, formatter);
         }catch (Exception e){
             throw new IllegalArgumentException("Invalid date format");
         }
 
     }
-
-
-
 }

@@ -24,8 +24,8 @@ public class CustomerHttpService implements ICustomerHttpService {
 
     public CustomerResponse getCustomerByName(String name) {
         try{
-            String url = clientApiUrl +  "customers/find/name?name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
-//            System.out.println("url " + url);
+            String url = clientApiUrl +  "/customers/find/name?name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
+            System.out.println("url " + url);
             return restTemplate.getForObject(url, CustomerResponse.class);
         }catch (Exception e){
 //            System.err.println(e.getMessage());

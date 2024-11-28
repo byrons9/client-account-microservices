@@ -40,7 +40,7 @@ public class AccountService implements  IAccountService{
     }
 
     public List<AccountDTO> findByCustomerId(Long clientId){
-        List<Account> accounts = accountRepository.findByClientId(clientId);
+        List<Account> accounts = accountRepository.findByCustomerId(clientId);
         return accountConverter.fromListEntityToDTOList(accounts);
     }
 
@@ -52,9 +52,9 @@ public class AccountService implements  IAccountService{
     }
 
     public AccountDTO createAccount(AccountDTO accountDTO){
-        String clientName = accountDTO.getCustomerName();
-        if (clientName == null) {
-            throw new IllegalArgumentException("Client name is required");
+        String customerName = accountDTO.getCustomerName();
+        if (customerName == null) {
+            throw new IllegalArgumentException("Customer name is required");
         }
         CustomerResponse customerResponse = customerHttpService.getCustomerByName(accountDTO.getCustomerName());
         accountDTO.setCustomerId(customerResponse.getId());

@@ -18,6 +18,6 @@ public class Account {
     private Boolean status;
     private Long customerId;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Movement> movements;
 }

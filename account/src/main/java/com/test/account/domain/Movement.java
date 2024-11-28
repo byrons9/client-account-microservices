@@ -3,7 +3,7 @@ package com.test.account.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -16,8 +16,8 @@ public class Movement {
     private Double amount;
     private Double balance;
     private Boolean status;
-    private Instant createdAt;
+    private LocalDate createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "customerId")
     private Account account;
 }

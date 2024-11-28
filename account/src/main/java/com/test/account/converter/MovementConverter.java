@@ -4,6 +4,10 @@ import com.test.account.domain.Movement;
 import com.test.account.model.MovementDTO;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,5 +60,22 @@ public class MovementConverter {
 
     public List<Movement> fromListDTOToEntityList(List<MovementDTO> movementDTOS) {
         return movementDTOS.stream().map(this::fromDTO).collect(Collectors.toList());
+    }
+
+    private Instant convertStringToLocalInstant(String dateStr){
+        try{
+
+            // Define the formatter matching the input format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            // Parse the date string to a LocalDate
+            LocalDate localDate = LocalDate.parse(dateStr, formatter);
+
+            // Convert the LocalDate to an Instant (UTC time)
+            return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        }catch (Exception e){
+            throw new IllegalArgumentException("Invalid date format");
+        }
+
     }
 }

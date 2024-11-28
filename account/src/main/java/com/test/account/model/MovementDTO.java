@@ -2,7 +2,7 @@ package com.test.account.model;
 
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 public class MovementDTO {
@@ -14,6 +14,6 @@ public class MovementDTO {
     private String accountNumber;
     private String movementDetail;
     private AccountDTO account;
-    private Instant createdAt;
+    private LocalDate createdAt;
     private Boolean status;
 }
