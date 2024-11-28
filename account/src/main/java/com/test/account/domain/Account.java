@@ -16,7 +16,7 @@ public class Account {
     private String accountType;
     private Double initialBalance;
     private Boolean status;
-    private Long clientId;
+    private Long customerId;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Movement> movements;
