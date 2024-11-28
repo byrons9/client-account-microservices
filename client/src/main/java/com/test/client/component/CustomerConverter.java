@@ -46,13 +46,13 @@ public class CustomerConverter {
         customer.setId(customerDTO.getId());
         customer.setAddress(customerDTO.getAddress());
         customer.setAge(customerDTO.getAge());
-        customer.setGender(customer.getGender());
-        customer.setIdentification(customer.getIdentification());
-        customer.setName(customer.getName());
-        customer.setPhone(customer.getPhone());
+        customer.setGender(customerDTO.getGender());
+        customer.setIdentification(customerDTO.getIdentification());
+        customer.setName(customerDTO.getName());
+        customer.setPhone(customerDTO.getPhone());
         // Encrypt the password before saving it to the database
         customer.setPassword(passwordConverterComponent.encodePassword(customerDTO.getPassword()));
-        customer.setStatus(customer.getStatus());
+        customer.setStatus(customerDTO.getStatus());
         return customer;
 
     }

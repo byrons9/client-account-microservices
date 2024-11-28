@@ -180,6 +180,14 @@ class CustomerDTOServiceTest {
     }
 
     @Test
+    void TestShouldThrowAnExceptionWhenCustomerNameIsNull(){
+        Assertions.assertThatThrownBy(() -> customerService.getCustomerByName(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Name is required");
+        Mockito.verify(customerRepositoryMock, Mockito.times(0)).findByName(null);
+    }
+
+    @Test
     void testCreateCustomer() {
         Customer customer = new Customer();
         customer.setId(1L);

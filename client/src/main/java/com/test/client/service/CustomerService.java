@@ -39,6 +39,7 @@ public class CustomerService implements ICustomerService{
     }
 
     public CustomerDTO getCustomerByName(String clientName) {
+        Optional.ofNullable(clientName).orElseThrow(() -> new IllegalArgumentException("Name is required"));
         Optional<Customer> client = this.customerRepository.findByName(clientName);
         return client.map(customerConverter::convertToDTO).orElseThrow(() -> new CustomerNotFoundException(
                 "Customer not found with name: " + clientName)

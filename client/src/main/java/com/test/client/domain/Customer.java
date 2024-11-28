@@ -11,5 +11,5 @@ import lombok.EqualsAndHashCode;
 @Table(name = "customer")
 public class Customer  extends Person{
     private String password;
-    private Boolean status;
+    private Boolean status = true;
 }
